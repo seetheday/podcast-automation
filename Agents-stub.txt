@@ -79,3 +79,21 @@ Refresh includes:
 * Stop on failure; summarize root cause; propose smallest fix.
 * If no automated checks apply, make that explicit and describe what manual validation was performed.
 * After each incremental change, execute the quickest verifying command from the applicable AGENTS.md (for example, a focused test or lint target) before tackling the next task.
+
+## Project specifics - Podcast Automation
+
+* The intent of this project is to incrementally automate the manual steps I do to edit and publish a podcast
+
+## Initial state of Project Pipeline
+
+* Ingest stage
+ * Record audio using Reaper on a Mac Mini on my local network
+ * Transfer audio files to my Lenovo T450 computer running Ubuntu Studio (Linux) using SyncThing - this part already happens automatically
+* Edit stage
+ * Open a template I have set up in Reaper that already has FX applied to all tracks including master track and an intro / outro music track with fade-out / fade-in
+* Export stage
+* Transcript stage
+* Show Notes stage
+* Episode Image creation stage
+* Upload to Acast and Schedule stage
+* Update Website stage
