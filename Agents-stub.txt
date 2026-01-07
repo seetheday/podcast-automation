@@ -1,0 +1,81 @@
+!Important! These top-level principles should guide your coding work:
+
+Work doggedly. Your goal is to be autonomous as long as possible. If you know the user's overall goal, and there is still progress you can make towards that goal, continue working until you can no longer make progress. Whenever you stop working, be prepared to justify why.
+
+Work smart. When debugging, take a step back and think deeply about what might be going wrong. When something is not working as intended, add logging to check your assumptions.
+
+Check your work. If you write a chunk of code, try to find a way to run it and make sure it does what you expect. If you kick off a long process, wait 30 seconds then check the logs to make sure it is running as expected.
+
+Be cautious with terminal commands. Before every terminal command, consider carefully whether it can be expected to exit on its own, or if it will run indefinitely (e.g. launching a web server). For processes that run indefinitely, always launch them in a new process (e.g. nohup). Similarly, if you have a script to do something, make sure the script has similar protections against running indefinitely before you run it.
+
+Every time you are done working, create/update a document handoff.md in the root project directory which always has a (brief) summary of what we've been most recently working on, including my last couple of prompts. The goal is that if the context window gets too crowded, we can restart with a new task, and the new agent can pick up where you left off using the readme (describing the project) and the handoff document (describing what we were most recently working on). 
+
+# Global Codex Guidance
+
+Applies to every Codex session on this machine; defer to repo or subdirectory AGENTS.md when they provide more specific instructions.
+
+## How to use this file
+
+* Skim once at the start of a session to align on global policies.
+* Follow project or folder AGENTS.md files for task-specific commands and nuances.
+* Ask the user when instructions conflict or feel unsafe.
+
+## Operating mode
+
+* Host: untouched unless user explicitly requests host changes. Assume you are running on a CachyOS host (Arch-based Linux).
+* Execution: run deterministically, show diffs, prefer smallest verifiable unit (lint/typecheck/test). Stop on failure.
+* Sensitive files: never touch `.env`, secrets, infra config, or production data without explicit instruction.
+
+## Models
+
+* Prefer `gpt-5-codex`. If unavailable, state active model and limitations.
+
+## Agent conduct
+
+* Verify assumptions before executing commands; call out uncertainties first.
+* Ask for clarification when the request is ambiguous, destructive, or risky.
+* Summarize intent before performing multi-step fixes so the user can redirect early.
+* Cite the source when using documentation; quote exact lines instead of paraphrasing from memory.
+* Break work into incremental steps and confirm each step with the smallest relevant check before moving on.
+
+## Documentation and MCP
+
+* Fetch minimal targeted docs. Summarize inline; do not paste dumps.
+* When API uncertainty remains: produce a runnable repro snippet and verify locally.
+* If the needed documentation cannot be found, say so explicitly and explain the fallback approach.
+* If you already know the Context7 library ID (e.g. `/supabase/supabase`), provide it directly to skip resolution.
+
+## Container discipline
+
+* Use `docker compose` if manifest exists; otherwise create minimal `docker-compose.yml` or `docker run`.
+* Workspace: `.:/app` read-write, `WORKDIR=/app`.
+* User: match host UID/GID (`--user $(id -u):$(id -g)`).
+* Use non-root user when possible.
+* Cache dependencies in named volumes (`node_cache`, `pip_cache`, `uv_cache`, etc).
+* Do not start long-running services or daemons unless the user explicitly requests it.
+
+## State & living docs
+
+Maintain:
+
+* `README.md` — stable overview.
+* `HANDOFF.md` — current status for continuity.
+
+Refresh triggers: contradictions, omissions, flaky tests, or version uncertainty.
+
+Refresh includes:
+
+* `README.md`: purpose, architecture, stack with versions, run instructions, changelog-lite.
+* `HANDOFF.md`: current status, next steps, test results, artifacts, environment details.
+
+## Commands and checks
+
+* Show plan before large edits.
+* Capture exit codes and logs.
+* Run impacted checks only:
+  * lint → changed files
+  * typecheck → touched modules
+  * test → nearest tests, expand only if upstream failure
+* Stop on failure; summarize root cause; propose smallest fix.
+* If no automated checks apply, make that explicit and describe what manual validation was performed.
+* After each incremental change, execute the quickest verifying command from the applicable AGENTS.md (for example, a focused test or lint target) before tackling the next task.
