@@ -20,5 +20,6 @@ The order is important
 17. Write a good title for the podcast.
 18. Upload episode image to Acast.
 19. Schedule the podcast to be published on Acast.
-20. Create an entry for the episode on the website via the Sanity headless CMS including a description, relevant metadata, and the uploaded episode image and schedule it to go live at the same time the episode is scheduled to go live on Acast.
-21. Get the Acast ID from the Acast website about it, and enter that into the sanity headless cms entry before it goes live.
+20. Get copy of transcription that is already automated using openai whisper, a python script and a local cronjob for the website content.
+21. Create an entry for the episode on the website via the Sanity headless CMS including a description, relevant metadata, and the uploaded episode image and schedule it to go live at the same time the episode is scheduled to go live on Acast.
+22. Get the Acast ID from the Acast website about it, and enter that into the sanity headless cms entry before it goes live.
