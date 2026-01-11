@@ -92,13 +92,14 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-    H1[Human craft<br/>Research, narrative, pacing] --> R[Release-ready episode]
-    A1[AI assistance<br/>Leveling, cleanup, detection] --> H1
-    A2[AI assistance<br/>Metadata, linting, validation] --> H1
+    H1[Human pre-production & recording] --> A1
+    H2[Human craft<br/>Research, narrative, pacing] --> R[Release-ready episode]
+    A1[AI assistance<br/>Leveling, cleanup, detection] --> H2
+    A2[AI assistance<br/>Metadata, linting, validation] --> H2
 
     classDef human fill:#fef3c7,stroke:#b45309,color:#78350f;
     classDef auto fill:#dbeafe,stroke:#2563eb,color:#1e3a8a;
-    class H1,R human;
+    class H1,H2, R human;
     class A1,A2 auto;
 ```
 
