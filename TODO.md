@@ -7,7 +7,6 @@
 - [CAN HELP] Run `pytest tests` (or stage-specific subsets) and record results.
 
 ## Later / backlog
-- [CAN HELP] Set up Codex code review in GitHub.
 - [CAN HELP] Look into MCPs for better transcription with timestamps.
   - [CAN HELP] Explore adding transcription rules (e.g., "Christina" vs "Kristina").
 - [CAN HELP] Create overall `plan.md`.
