@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 260" role="img" aria-labelledby="title desc">
+  <title id="title">Manual flow to automated flow</title>
+  <desc id="desc">Diagram showing manual research and editing flow with an automated pipeline track.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor" />
+    </marker>
+  </defs>
+  <style>
+    .box { fill: none; stroke: currentColor; stroke-width: 2; rx: 10; }
+    .label { font: 14px/1.2 "Inter", system-ui, -apple-system, sans-serif; fill: currentColor; }
+    .small { font-size: 12px; }
+    .arrow { stroke: currentColor; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+  </style>
+
+  <!-- Top manual flow -->
+  <rect class="box" x="20" y="20" width="170" height="60" />
+  <text class="label" x="105" y="45" text-anchor="middle">
+    <tspan x="105" dy="0">Research &amp; Recording</tspan>
+    <tspan x="105" dy="18">Human-led</tspan>
+  </text>
+
+  <rect class="box" x="220" y="20" width="170" height="60" />
+  <text class="label" x="305" y="45" text-anchor="middle">
+    <tspan x="305" dy="0">Manual Editing</tspan>
+    <tspan x="305" dy="18">High craft</tspan>
+  </text>
+
+  <rect class="box" x="420" y="20" width="170" height="60" />
+  <text class="label" x="505" y="45" text-anchor="middle">
+    <tspan x="505" dy="0">Export &amp; Publish</tspan>
+    <tspan x="505" dy="18">Manual steps</tspan>
+  </text>
+
+  <line class="arrow" x1="190" y1="50" x2="220" y2="50" />
+  <line class="arrow" x1="390" y1="50" x2="420" y2="50" />
+
+  <!-- Automation pipeline -->
+  <rect class="box" x="20" y="150" width="130" height="60" />
+  <text class="label small" x="85" y="175" text-anchor="middle">
+    <tspan x="85" dy="0">Automation</tspan>
+    <tspan x="85" dy="16">Pipeline</tspan>
+  </text>
+
+  <rect class="box" x="165" y="150" width="120" height="60" />
+  <text class="label small" x="225" y="182" text-anchor="middle">Ingest</text>
+
+  <rect class="box" x="300" y="150" width="120" height="60" />
+  <text class="label small" x="360" y="182" text-anchor="middle">Edit Automation</text>
+
+  <rect class="box" x="435" y="150" width="120" height="60" />
+  <text class="label small" x="495" y="182" text-anchor="middle">Export Validation</text>
+
+  <rect class="box" x="570" y="150" width="120" height="60" />
+  <text class="label small" x="630" y="182" text-anchor="middle">Transcript + Notes</text>
+
+  <rect class="box" x="705" y="150" width="165" height="60" />
+  <text class="label small" x="787" y="182" text-anchor="middle">Artwork + Publish</text>
+
+  <line class="arrow" x1="150" y1="180" x2="165" y2="180" />
+  <line class="arrow" x1="285" y1="180" x2="300" y2="180" />
+  <line class="arrow" x1="420" y1="180" x2="435" y2="180" />
+  <line class="arrow" x1="555" y1="180" x2="570" y2="180" />
+  <line class="arrow" x1="690" y1="180" x2="705" y2="180" />
+
+  <line class="arrow" x1="105" y1="80" x2="105" y2="150" />
+</svg>
