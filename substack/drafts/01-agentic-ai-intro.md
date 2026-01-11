@@ -92,8 +92,8 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-    H1[Human pre-production & recording] --> A1
-    H2[Human craft<br/>Research, narrative, pacing] --> R[Release-ready episode]
+    H1[Human Research, narrative, recording] --> A1,A2
+    H2[Human craft<br/>Pacing] --> R[Release-ready episode]
     A1[AI assistance<br/>Leveling, cleanup, detection] --> H2
     A2[AI assistance<br/>Metadata, linting, validation] --> H2
 
