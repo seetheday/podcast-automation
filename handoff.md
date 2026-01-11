@@ -3,6 +3,7 @@
 - Ingest CLI (`automation/ingest/sync.py`) now catalogs both WAV recordings and matching renders: it loads defaults pointing to `~/Reaper/MacBook`, reads overrides from `configs/ingest.toml`, discovers `<episode>/Media/*.wav`, and validates whether a rendered MP3 exists in `final audio` (including duplicate detection).
 - Added an example config (`configs/ingest.example.toml`) for source/render overrides and kept `configs/ingest.toml` optional.
 - Expanded the ingest test suite (`tests/ingest/test_sync.py`) to cover config parsing, episode discovery, render presence, missing renders, and duplicate render detection. All tests pass with `PYTHONDONTWRITEBYTECODE=1 pytest`.
+- Sample input audio for automation work lives in `assets/audio/samples` for local testing and fixtures.
 
 # Recent Prompts
 1. "Given this information is the ingest code correct?"

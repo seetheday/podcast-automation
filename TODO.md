@@ -3,7 +3,7 @@
 ## Critical path (run tests with real sample inputs)
 - [HUMAN] Document required environment variables (if any) in `HANDOFF.md`.
 - [CAN HELP] Ensure `requirements.txt` is installed in a Python 3.11+ venv for testing.
-- [CAN HELP] Create/extend `pytest` fixtures under `tests/<stage>` to point at the sample inputs.
+- [CAN HELP] Create/extend `pytest` fixtures under `tests/<stage>` to point at the sample inputs in `assets/audio/samples`.
 - [CAN HELP] Run `pytest tests` (or stage-specific subsets) and record results.
 
 ## Later / backlog
