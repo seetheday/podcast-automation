@@ -4,21 +4,25 @@ from automation.ingest import IngestConfig, build_ingest_config, discover_episod
 
 
 def write_toml(path: Path, content: str) -> None:
+    """Write TOML content to disk for configuration tests."""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content)
 
 
 def create_wav(path: Path, content: bytes = b"data") -> None:
+    """Create a small WAV placeholder file for ingest tests."""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(content)
 
 
 def create_mp3(path: Path, content: bytes = b"ID3") -> None:
+    """Create a small MP3 placeholder file for ingest tests."""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(content)
 
 
 def test_build_ingest_config_reads_toml(tmp_path: Path) -> None:
+    """Scenario: read ingest config from TOML."""
     config_path = tmp_path / "configs" / "ingest.toml"
     write_toml(
         config_path,
@@ -42,10 +46,11 @@ def test_build_ingest_config_reads_toml(tmp_path: Path) -> None:
 
 
 def test_build_ingest_config_overrides_cli(tmp_path: Path) -> None:
+    """Scenario: override TOML settings with CLI inputs."""
     config_path = tmp_path / "configs" / "ingest.toml"
     write_toml(
         config_path,
-        "source_root = \"/tmp/ignored\"\nrender_dir = \"/tmp/ignored\"\n",
+        'source_root = "/tmp/ignored"\nrender_dir = "/tmp/ignored"\n',
     )
 
     override_source = tmp_path / "custom"
@@ -62,6 +67,7 @@ def test_build_ingest_config_overrides_cli(tmp_path: Path) -> None:
 
 
 def test_discover_episodes_lists_media_dirs(tmp_path: Path) -> None:
+    """Scenario: list episodes with media folders."""
     root = tmp_path / "Reaper" / "MacBook"
     episode_dir = root / "Huron Carol" / "Media"
     create_wav(episode_dir / "01-host.wav", b"wave")
@@ -85,6 +91,7 @@ def test_discover_episodes_lists_media_dirs(tmp_path: Path) -> None:
 
 
 def test_discover_episodes_filters_by_name(tmp_path: Path) -> None:
+    """Scenario: filter episodes by name."""
     root = tmp_path / "Reaper" / "MacBook"
     create_wav(root / "EpisodeA" / "Media" / "a.wav")
     create_wav(root / "EpisodeB" / "Media" / "b.wav")
@@ -97,6 +104,7 @@ def test_discover_episodes_filters_by_name(tmp_path: Path) -> None:
 
 
 def test_discover_episodes_reports_missing_render(tmp_path: Path) -> None:
+    """Scenario: report missing render output."""
     root = tmp_path / "Reaper" / "MacBook"
     create_wav(root / "EpisodeA" / "Media" / "a.wav")
     config = IngestConfig(source_root=root, render_dir=root / "final audio")
@@ -107,6 +115,7 @@ def test_discover_episodes_reports_missing_render(tmp_path: Path) -> None:
 
 
 def test_discover_episodes_reports_duplicate_renders(tmp_path: Path) -> None:
+    """Scenario: report duplicate render outputs."""
     root = tmp_path / "Reaper" / "MacBook"
     render_dir = root / "final audio"
     create_wav(root / "Episode A" / "Media" / "a.wav")
