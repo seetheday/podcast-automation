@@ -1,0 +1,4 @@
+# Configure where synced Reaper sessions and rendered MP3s live.
+source_root = "~/Reaper/MacBook"
+render_dir = "~/Reaper/MacBook/final audio"
+extensions = [".wav"]
