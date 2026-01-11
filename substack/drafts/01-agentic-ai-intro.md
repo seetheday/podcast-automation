@@ -1,6 +1,4 @@
-# Draft: Building an Agentic AI Podcast Pipeline (Without Outsourcing the Story)
-
-*Working title: A technical build log for automating the boring parts of podcast production.*
+# Building an agentic podcast pipeline without outsourcing the soul
 
 ## Before we start: what this is **not**
 
