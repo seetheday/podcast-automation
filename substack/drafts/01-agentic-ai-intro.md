@@ -99,7 +99,7 @@ flowchart TB
 
     classDef human fill:#fef3c7,stroke:#b45309,color:#78350f;
     classDef auto fill:#dbeafe,stroke:#2563eb,color:#1e3a8a;
-    class H1,H2, R human;
+    class H1,H2,R human;
     class A1,A2 auto;
 ```
 
