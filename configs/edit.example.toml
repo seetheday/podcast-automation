@@ -1,0 +1,14 @@
+# Example configuration for the edit stage.
+# Copy to configs/edit.toml to customize locally.
+
+# Normalized amplitude threshold for silence detection (0-1).
+silence_threshold = 0.02
+
+# Minimum length of silence (seconds) before trimming.
+min_silence_duration_s = 0.5
+
+# Seconds of padding to keep around trimmed silence.
+trim_padding_s = 0.1
+
+# Accepted audio extensions for edit inputs.
+audio_extensions = [".wav"]
