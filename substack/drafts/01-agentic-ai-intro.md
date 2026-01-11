@@ -67,6 +67,41 @@ So the plan is structured as a series of milestones that mirror the real product
 
 Each stage is designed as a runnable CLI with test fixtures so we can verify results before we trust them in production.
 
+
+### Diagram: Manual flow → Automated flow
+
+```mermaid
+flowchart LR
+    A[Research & Recording<br/>Human-led] --> B[Manual Editing<br/>High craft]
+    B --> C[Export & Publish<br/>Manual steps]
+
+    A --> D[Automation Pipeline]
+    D --> E[Ingest]
+    E --> F[Edit Automation]
+    F --> G[Export Validation]
+    G --> H[Transcript + Notes]
+    H --> I[Artwork + Publish]
+
+    classDef human fill:#fef3c7,stroke:#b45309,color:#78350f;
+    classDef auto fill:#dbeafe,stroke:#2563eb,color:#1e3a8a;
+    class A,B,C human;
+    class D,E,F,G,H,I auto;
+```
+
+### Diagram: Where humans stay in control
+
+```mermaid
+flowchart TB
+    H1[Human craft<br/>Research, narrative, pacing] --> R[Release-ready episode]
+    A1[AI assistance<br/>Leveling, cleanup, detection] --> H1
+    A2[AI assistance<br/>Metadata, linting, validation] --> H1
+
+    classDef human fill:#fef3c7,stroke:#b45309,color:#78350f;
+    classDef auto fill:#dbeafe,stroke:#2563eb,color:#1e3a8a;
+    class H1,R human;
+    class A1,A2 auto;
+```
+
 ## Work done so far (foundation)
 
 The initial ingest stage is done:
