@@ -2,26 +2,17 @@
 
 *Working title: A technical build log for automating the boring parts of podcast production.*
 
-## Who this is for (and who it’s not)
-
-This is for technical readers who want to see how an agentic AI system is designed and built in the open. If you want a plug-and-play, consumer-friendly shortcut, this won’t be it.
-
-We’re going to outline every step we take to automate the *existing* manual Maple History workflow by building an agentic AI solution using OpenAI’s Codex. The code is public on GitHub and licensed under GPL 3.0 so anyone can learn from it, fork it, or adapt it to their own production flow:
-
-- Repo: https://github.com/seetheday/podcast-automation
-- License: GPL 3.0
-
 ## Before we start: what this is **not**
 
 If you’ve felt uneasy about “AI in podcasts,” you’re not alone. A lot of people hear *AI podcast* and assume it means automated research, AI-written scripts, or synthetic voices. That’s not what we’re doing. Not even close.
 
 The Maple History podcast is built the old-fashioned way:
 
-- Christina (our host) hand-writes her research notes.
+- Christina (our host) hand-writes her research notes and types her scripts by hand, without any AI summarization.
 - She spends hours with physical books, digital archives, and academic papers.
 - The research is human, careful, and personal.
 
-We believe history is *earned*, not generated. And storytelling is *found in the edit*, not in a prompt.
+We believe historical storytelling is *is in the edit*, so AI can never replace what a human can do.
 
 ## So why AI at all?
 
@@ -43,6 +34,15 @@ That’s where we’re using AI. **Not to create the story, but to clear the run
 ## A note on how AI is used in this write-up
 
 The podcast content itself uses no AI for writing or research. However, I *am* using AI to help document the technical work you’ll see in these posts, including summarizing changes and clarifying what each automation step does. This is a build log, and I want it to be as clear as possible.
+
+## Who this is for (and who it’s not)
+
+This is for technical readers who want to see how an agentic AI system is designed and built in the open. If you want a plug-and-play, consumer-friendly shortcut, this won’t be it.
+
+We’re going to outline every step we take to automate the *existing* manual Maple History workflow by building an agentic AI solution using OpenAI’s Codex. The code is public on GitHub and licensed under GPL 3.0 so anyone can learn from it, fork it, or adapt it to their own production flow as long as they have the required technical skills:
+
+- Repo: https://github.com/seetheday/podcast-automation
+- License: GPL 3.0
 
 ## The goal: an agentic workflow that respects authenticity
 
