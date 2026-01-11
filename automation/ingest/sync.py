@@ -3,12 +3,11 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass
 import re
+import tomllib
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Sequence
-
-import tomllib
 
 DEFAULT_SOURCE_ROOT = Path.home() / "Reaper" / "MacBook"
 DEFAULT_RENDER_DIR = DEFAULT_SOURCE_ROOT / "final audio"
@@ -23,6 +22,7 @@ class Recording:
 
     @property
     def size_bytes(self) -> int:
+        """Return the file size in bytes for the recording."""
         return self.path.stat().st_size
 
 
@@ -35,6 +35,8 @@ class RenderInfo:
 
     @property
     def status(self) -> str:
+        """Summarize render status for display in CLI output."""
+        # Prefer a friendly status token so the CLI can stay simple.
         if self.path and not self.duplicates:
             return "found"
         if self.duplicates:
@@ -53,6 +55,7 @@ class Episode:
 
     @property
     def total_size(self) -> int:
+        """Return the sum of sizes for all recordings in the episode."""
         return sum(recording.size_bytes for recording in self.recordings)
 
 
@@ -65,14 +68,17 @@ class IngestConfig:
     extensions: tuple[str, ...] = DEFAULT_EXTENSIONS
 
     def normalized_extensions(self) -> tuple[str, ...]:
+        """Normalize extension values to lowercase for comparison."""
         return tuple(ext.lower() for ext in self.extensions)
 
 
 def expand_path(value: str | Path) -> Path:
+    """Expand user shortcuts and resolve a path for on-disk comparisons."""
     return Path(value).expanduser().resolve()
 
 
 def load_config_from_file(path: Path | None) -> dict[str, Any]:
+    """Load ingest settings from a TOML file if it exists."""
     if path is None or not path.exists():
         return {}
     with path.open("rb") as handle:
@@ -80,6 +86,7 @@ def load_config_from_file(path: Path | None) -> dict[str, Any]:
 
 
 def parse_extensions(raw: str | Sequence[str] | None) -> tuple[str, ...] | None:
+    """Parse and normalize extension values from CLI or config inputs."""
     if raw is None:
         return None
     if isinstance(raw, str):
@@ -99,9 +106,11 @@ def build_ingest_config(
     render_override: Path | None,
     extensions_override: tuple[str, ...] | None,
 ) -> IngestConfig:
+    """Build the ingest configuration with file defaults and CLI overrides."""
     settings = load_config_from_file(config_path)
     config = IngestConfig()
 
+    # Start with file-based configuration before applying CLI overrides.
     source_root = settings.get("source_root")
     render_dir = settings.get("render_dir")
     extensions = settings.get("extensions")
@@ -126,10 +135,12 @@ def build_ingest_config(
 
 
 def discover_episodes(config: IngestConfig, *, episode_filter: str | None = None) -> list[Episode]:
+    """Enumerate episode media directories and associated renders."""
     if not config.source_root.exists():
         raise FileNotFoundError(f"Source root not found: {config.source_root}")
 
     episodes: list[Episode] = []
+    # Walk the top-level source root and only consider entries with Media folders.
     for candidate in sorted(p for p in config.source_root.iterdir() if p.is_dir()):
         if episode_filter and candidate.name != episode_filter:
             continue
@@ -140,12 +151,15 @@ def discover_episodes(config: IngestConfig, *, episode_filter: str | None = None
         if recordings:
             render = locate_render(candidate.name, config)
             episodes.append(
-                Episode(name=candidate.name, media_dir=media_dir, recordings=recordings, render=render)
+                Episode(
+                    name=candidate.name, media_dir=media_dir, recordings=recordings, render=render
+                )
             )
     return episodes
 
 
 def list_recordings(media_dir: Path, config: IngestConfig) -> list[Recording]:
+    """Return recordings in a Media directory matching the configured extensions."""
     recordings: list[Recording] = []
     extensions = config.normalized_extensions()
     for path in media_dir.iterdir():
@@ -155,16 +169,19 @@ def list_recordings(media_dir: Path, config: IngestConfig) -> list[Recording]:
 
 
 def normalize_label(value: str) -> str:
+    """Normalize a label to a slug for matching renders."""
     return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
 
 
 def locate_render(episode_name: str, config: IngestConfig) -> RenderInfo:
+    """Locate the rendered MP3 matching an episode name."""
     render_dir = config.render_dir
     if not render_dir.exists():
         return RenderInfo(path=None)
 
     expected_key = normalize_label(episode_name)
     matches: list[Path] = []
+    # Compare normalized stems to allow minor differences in naming.
     for candidate in render_dir.glob("*.mp3"):
         if normalize_label(candidate.stem) == expected_key:
             matches.append(candidate)
@@ -177,6 +194,7 @@ def locate_render(episode_name: str, config: IngestConfig) -> RenderInfo:
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
+    """Create the CLI argument parser for ingest sync."""
     parser = argparse.ArgumentParser(description=__doc__ or "ingest.sync")
     parser.add_argument(
         "--config",
@@ -184,8 +202,12 @@ def build_arg_parser() -> argparse.ArgumentParser:
         default=Path("configs/ingest.toml"),
         help="Optional TOML config file describing source/render directories",
     )
-    parser.add_argument("--source-root", type=Path, help="Override source root directory", dest="source_root")
-    parser.add_argument("--render-dir", type=Path, help="Override render directory", dest="render_dir")
+    parser.add_argument(
+        "--source-root", type=Path, help="Override source root directory", dest="source_root"
+    )
+    parser.add_argument(
+        "--render-dir", type=Path, help="Override render directory", dest="render_dir"
+    )
     parser.add_argument(
         "--extensions",
         help="Comma separated list of accepted extensions (default: .wav)",
@@ -195,6 +217,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    """Run the ingest sync CLI and print discovered episode details."""
     parser = build_arg_parser()
     args = parser.parse_args(argv)
 
@@ -207,6 +230,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     episodes = discover_episodes(config, episode_filter=args.episode)
     if not episodes:
+        # Return a non-zero exit code so callers can detect missing episodes.
         print("No episodes found. Ensure the source root contains <episode>/Media directories.")
         return 1
 
