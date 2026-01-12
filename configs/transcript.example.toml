@@ -1,0 +1,7 @@
+# Transcript automation settings
+model_size = "small"
+temperature = 0.0
+
+[word_replacements]
+Christina = "Christina"
+Maple = "Maple"

@@ -10,18 +10,28 @@
     "sample_width": 2
   },
   "analysis": {
-    "duration_s": 31.00269841269841,
-    "max_amplitude": 0.021636962890625,
-    "leading_silence_s": 0.241156462585034,
-    "trailing_silence_s": 1.8037641723356008
+    "duration_s": 31.338707482993197,
+    "max_amplitude": 0.0201416015625,
+    "leading_silence_s": 0.16825396825396827,
+    "trailing_silence_s": 1.0236734693877552
   },
   "cuts": [
     {
-      "start_s": 29.29893424036281,
-      "end_s": 31.00269841269841,
+      "start_s": 30.415034013605442,
+      "end_s": 31.338707482993197,
       "reason": "trailing_silence"
     }
   ],
   "guidance_suggestions": 0,
-  "transcript_updated": false
+  "transcript_updated": true,
+  "loudness": {
+    "integrated_lufs": -25.425576228677144,
+    "true_peak_dbfs": -8.752196644494486
+  },
+  "alignment": {
+    "host_phrase_target_s": 6.836,
+    "host_phrase_detected_s": 6.5,
+    "noise_segments": 0
+  },
+  "transcript_source": "outputs/edit-sample/Sample-Host-Raw-transcript.json"
 }

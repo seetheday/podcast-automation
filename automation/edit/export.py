@@ -21,6 +21,7 @@ class ExportResult:
     delivery_mp3: Path | None
     report_path: Path
     cuts_path: Path
+    stems: dict[str, Path]
 
 
 def write_cut_list(path: Path, cuts: list[CutSegment]) -> None:
@@ -72,6 +73,7 @@ def export_outputs(
     spec: WaveSpec,
     cuts: list[CutSegment],
     report: dict,
+    stems: dict[str, array] | None = None,
 ) -> ExportResult:
     """Write edit outputs to disk and return their locations."""
     master_wav = output_dir / "edited-master.wav"
@@ -79,9 +81,17 @@ def export_outputs(
     report_path = output_dir / "edit-report.json"
     cuts_path = output_dir / "cut-list.json"
 
+    stem_paths: dict[str, Path] = {}
     write_wav(master_wav, samples=samples, spec=spec)
     write_cut_list(cuts_path, cuts)
     write_report(report_path, report)
+
+    if stems:
+        for role, stem_samples in stems.items():
+            stem_name = role.lower().replace(" ", "-")
+            stem_path = output_dir / f"edited-master-{stem_name}.wav"
+            write_wav(stem_path, samples=stem_samples, spec=spec)
+            stem_paths[stem_name] = stem_path
 
     mp3_created = encode_mp3(master_wav, delivery_mp3)
     return ExportResult(
@@ -89,4 +99,5 @@ def export_outputs(
         delivery_mp3=delivery_mp3 if mp3_created else None,
         report_path=report_path,
         cuts_path=cuts_path,
+        stems=stem_paths,
     )
