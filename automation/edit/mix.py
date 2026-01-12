@@ -78,13 +78,16 @@ def mix_samples(tracks: list[array]) -> array:
     mixed = array("h", [0] * max_length)
 
     for index in range(max_length):
-        # For each PCM index, sum samples across tracks and average them.
+        # For each PCM index, sum samples across active tracks and average them.
         summed = 0
+        active_tracks = 0
         for track in tracks:
             if index < len(track):
                 summed += track[index]
-        averaged = int(summed / len(tracks))
-        mixed[index] = max(min(averaged, 32767), -32768)
+                active_tracks += 1
+        if active_tracks:
+            averaged = int(summed / active_tracks)
+            mixed[index] = max(min(averaged, 32767), -32768)
 
     return mixed
 

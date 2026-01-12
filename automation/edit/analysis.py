@@ -48,6 +48,7 @@ def analyze_samples(
     max_amplitude = 0.0
     leading_frame = 0
     trailing_frame = total_frames
+    found_non_silence = False
 
     for frame_index in range(total_frames):
         frame_start = frame_index * channels
@@ -56,15 +57,20 @@ def analyze_samples(
         max_amplitude = max(max_amplitude, frame_max)
         if frame_max >= silence_threshold:
             leading_frame = frame_index
+            found_non_silence = True
             break
 
-    for frame_index in range(total_frames - 1, -1, -1):
-        frame_start = frame_index * channels
-        frame_slice = samples[frame_start : frame_start + channels]
-        frame_max = max(_to_float(sample, max_value) for sample in frame_slice)
-        if frame_max >= silence_threshold:
-            trailing_frame = frame_index
-            break
+    if found_non_silence:
+        for frame_index in range(total_frames - 1, -1, -1):
+            frame_start = frame_index * channels
+            frame_slice = samples[frame_start : frame_start + channels]
+            frame_max = max(_to_float(sample, max_value) for sample in frame_slice)
+            if frame_max >= silence_threshold:
+                trailing_frame = frame_index
+                break
+    else:
+        leading_frame = total_frames
+        trailing_frame = -1
 
     leading_silence_s = leading_frame / sample_rate if sample_rate else 0.0
     trailing_silence_s = (total_frames - trailing_frame - 1) / sample_rate if sample_rate else 0.0

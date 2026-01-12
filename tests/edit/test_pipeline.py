@@ -79,6 +79,23 @@ def test_apply_cut_list_trims_silence() -> None:
     assert len(trimmed) == 10
 
 
+def test_analyze_samples_all_silence() -> None:
+    """merge overlapping speech: treat fully silent audio as all silence."""
+    sample_rate = 10
+    samples = _build_samples([0] * 10)
+
+    analysis = analyze_samples(
+        samples,
+        sample_rate=sample_rate,
+        channels=1,
+        sample_width=2,
+        silence_threshold=0.1,
+    )
+
+    assert analysis.leading_silence_s == pytest.approx(1.0)
+    assert analysis.trailing_silence_s == pytest.approx(1.0)
+
+
 def test_mix_wav_files(samples_dir: Path) -> None:
     """merge overlapping speech: ensure WAV mix keeps format and length."""
     spec = WaveSpec(sample_rate=8000, channels=1, sample_width=2)
@@ -94,6 +111,22 @@ def test_mix_wav_files(samples_dir: Path) -> None:
 
     assert mixed_spec == spec
     assert len(mixed) == 8
+
+
+def test_mix_samples_handles_shorter_tracks(samples_dir: Path) -> None:
+    """merge overlapping speech: avoid scaling down once tracks end."""
+    spec = WaveSpec(sample_rate=8000, channels=1, sample_width=2)
+    sample_a = _build_samples([1000] * 2)
+    sample_b = _build_samples([2000] * 4)
+
+    path_a = samples_dir / "short.wav"
+    path_b = samples_dir / "long.wav"
+    _write_test_wav(path_a, samples=sample_a, spec=spec)
+    _write_test_wav(path_b, samples=sample_b, spec=spec)
+
+    mixed, _ = mix_wav_files([path_a, path_b])
+
+    assert list(mixed) == [1500, 1500, 2000, 2000]
 
 
 def test_read_wav_converts_24bit(samples_dir: Path) -> None:
