@@ -17,19 +17,6 @@ class WaveSpec:
     sample_width: int
 
 
-def _convert_24bit_to_16bit(frames: bytes) -> array:
-    """Convert 24-bit PCM frames into 16-bit PCM samples."""
-    samples = array("h")
-    for index in range(0, len(frames), 3):
-        chunk = frames[index : index + 3]
-        if len(chunk) < 3:
-            continue
-        sample_24 = int.from_bytes(chunk, byteorder="little", signed=True)
-        sample_16 = max(min(sample_24 >> 8, 32767), -32768)
-        samples.append(sample_16)
-    return samples
-
-
 def read_wav(path: Path) -> tuple[array, WaveSpec]:
     """Read a WAV file into an array of samples and return its format spec."""
     with wave.open(str(path), "rb") as wav_handle:
@@ -40,21 +27,9 @@ def read_wav(path: Path) -> tuple[array, WaveSpec]:
         )
         frames = wav_handle.readframes(wav_handle.getnframes())
 
-    if spec.sample_width == 2:
-        samples = array("h")
-        samples.frombytes(frames)
-        return samples, spec
-
-    if spec.sample_width == 3:
-        samples = _convert_24bit_to_16bit(frames)
-        converted_spec = WaveSpec(
-            sample_rate=spec.sample_rate,
-            channels=spec.channels,
-            sample_width=2,
-        )
-        return samples, converted_spec
-
-    raise ValueError("Only 16-bit and 24-bit PCM WAV files are supported for mixing")
+    samples = array("h")
+    samples.frombytes(frames)
+    return samples, spec
 
 
 def ensure_matching_specs(specs: list[WaveSpec]) -> WaveSpec:
@@ -78,16 +53,13 @@ def mix_samples(tracks: list[array]) -> array:
     mixed = array("h", [0] * max_length)
 
     for index in range(max_length):
-        # For each PCM index, sum samples across active tracks and average them.
+        # For each PCM index, sum samples across tracks and average them.
         summed = 0
-        active_tracks = 0
         for track in tracks:
             if index < len(track):
                 summed += track[index]
-                active_tracks += 1
-        if active_tracks:
-            averaged = int(summed / active_tracks)
-            mixed[index] = max(min(averaged, 32767), -32768)
+        averaged = int(summed / len(tracks))
+        mixed[index] = max(min(averaged, 32767), -32768)
 
     return mixed
 
