@@ -29,6 +29,19 @@ def _build_samples(frames: list[int]) -> array:
     return array("h", frames)
 
 
+def _write_24bit_wav(path: Path, *, frames: list[int], sample_rate: int, channels: int) -> None:
+    """Write a simple 24-bit WAV file from a list of mono frame values."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    packed = bytearray()
+    for value in frames:
+        packed.extend(int(value).to_bytes(3, byteorder="little", signed=True))
+    with wave.open(str(path), "wb") as wav_handle:
+        wav_handle.setnchannels(channels)
+        wav_handle.setsampwidth(3)
+        wav_handle.setframerate(sample_rate)
+        wav_handle.writeframes(packed)
+
+
 def test_analyze_samples_detects_silence() -> None:
     """merge overlapping speech: detect leading/trailing silence boundaries."""
     sample_rate = 10
@@ -81,3 +94,24 @@ def test_mix_wav_files(samples_dir: Path) -> None:
 
     assert mixed_spec == spec
     assert len(mixed) == 8
+
+
+def test_mix_wav_files_downsamples_24_bit(samples_dir: Path) -> None:
+    """merge overlapping speech: allow 24-bit WAVs to mix with 16-bit tracks."""
+    sample_rate = 44100
+    channels = 1
+    host_24 = samples_dir / "host24.wav"
+    guest_24 = samples_dir / "guest24.wav"
+    intro_16 = samples_dir / "intro16.wav"
+
+    _write_24bit_wav(host_24, frames=[1000] * 4, sample_rate=sample_rate, channels=channels)
+    _write_24bit_wav(guest_24, frames=[500] * 4, sample_rate=sample_rate, channels=channels)
+
+    spec_16 = WaveSpec(sample_rate=sample_rate, channels=channels, sample_width=2)
+    _write_test_wav(intro_16, samples=_build_samples([250] * 4), spec=spec_16)
+
+    mixed, mixed_spec = mix_wav_files([host_24, guest_24, intro_16])
+
+    assert mixed_spec.sample_width == 2
+    assert mixed_spec.sample_rate == sample_rate
+    assert len(mixed) == 4

@@ -7,6 +7,8 @@ from array import array
 from dataclasses import dataclass
 from pathlib import Path
 
+from automation.edit.audio_io import read_pcm_samples
+
 
 @dataclass(frozen=True)
 class WaveSpec:
@@ -20,15 +22,13 @@ class WaveSpec:
 def read_wav(path: Path) -> tuple[array, WaveSpec]:
     """Read a WAV file into an array of samples and return its format spec."""
     with wave.open(str(path), "rb") as wav_handle:
-        spec = WaveSpec(
-            sample_rate=wav_handle.getframerate(),
-            channels=wav_handle.getnchannels(),
-            sample_width=wav_handle.getsampwidth(),
-        )
+        sample_rate = wav_handle.getframerate()
+        channels = wav_handle.getnchannels()
+        sample_width = wav_handle.getsampwidth()
         frames = wav_handle.readframes(wav_handle.getnframes())
 
-    samples = array("h")
-    samples.frombytes(frames)
+    samples, normalized_width = read_pcm_samples(frames, sample_width=sample_width)
+    spec = WaveSpec(sample_rate=sample_rate, channels=channels, sample_width=normalized_width)
     return samples, spec
 
 

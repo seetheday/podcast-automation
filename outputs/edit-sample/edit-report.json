@@ -1,0 +1,27 @@
+{
+  "inputs": [
+    "assets/audio/samples/Sample-Guest-Raw.wav",
+    "assets/audio/samples/Sample-Host-Raw.wav",
+    "assets/audio/samples/Sample-Intro-Outro-Music.wav"
+  ],
+  "wave_spec": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "sample_width": 2
+  },
+  "analysis": {
+    "duration_s": 31.00269841269841,
+    "max_amplitude": 0.021636962890625,
+    "leading_silence_s": 0.241156462585034,
+    "trailing_silence_s": 1.8037641723356008
+  },
+  "cuts": [
+    {
+      "start_s": 29.29893424036281,
+      "end_s": 31.00269841269841,
+      "reason": "trailing_silence"
+    }
+  ],
+  "guidance_suggestions": 0,
+  "transcript_updated": false
+}
