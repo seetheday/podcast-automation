@@ -11,3 +11,6 @@
   - [CAN HELP] Explore adding transcription rules (e.g., "Christina" vs "Kristina").
 - [CAN HELP] Create overall `plan.md`.
 - [CAN HELP] Create 1st component `plan.md`.
+
+## Substack posts
+- Codex & Github setup and mindset on how to best use (TPM/Engineering Manager/PM not IC, environment req's etc.)
