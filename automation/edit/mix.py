@@ -7,8 +7,6 @@ from array import array
 from dataclasses import dataclass
 from pathlib import Path
 
-from automation.edit.audio_io import read_pcm_samples
-
 
 @dataclass(frozen=True)
 class WaveSpec:
@@ -29,14 +27,8 @@ def read_wav(path: Path) -> tuple[array, WaveSpec]:
         )
         frames = wav_handle.readframes(wav_handle.getnframes())
 
-    samples, normalized_width = read_pcm_samples(frames, sample_width=spec.sample_width)
-    # Normalize the spec so downstream mixing sees a consistent sample width.
-    spec = WaveSpec(
-        sample_rate=spec.sample_rate,
-        channels=spec.channels,
-        sample_width=normalized_width,
-    )
-
+    samples = array("h")
+    samples.frombytes(frames)
     return samples, spec
 
 
@@ -61,16 +53,13 @@ def mix_samples(tracks: list[array]) -> array:
     mixed = array("h", [0] * max_length)
 
     for index in range(max_length):
-        # For each PCM index, sum samples across active tracks and average them.
+        # For each PCM index, sum samples across tracks and average them.
         summed = 0
-        active_tracks = 0
         for track in tracks:
             if index < len(track):
                 summed += track[index]
-                active_tracks += 1
-        if active_tracks:
-            averaged = int(summed / active_tracks)
-            mixed[index] = max(min(averaged, 32767), -32768)
+        averaged = int(summed / len(tracks))
+        mixed[index] = max(min(averaged, 32767), -32768)
 
     return mixed
 
