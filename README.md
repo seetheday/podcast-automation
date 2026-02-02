@@ -51,3 +51,30 @@ Results:
 
 ## Roadmap
 See `plan.md` and `TODO.md` for upcoming automation stages (export validation, show notes, artwork, publish). Each milestone adds a new CLI, config schema, fixtures, and tests so operators can trust the automation before adding heavier AI agents or MCP integrations.
+
+## Architecture Diagrams
+`docs/architecture/workspace.dsl` captures the C4 story for the Maple History automation stack. Use Structurizr Lite to view/edit:
+
+```bash
+docker run --rm -it \
+  -p 8081:8080 \
+  -v "$(pwd)/docs/architecture:/usr/local/structurizr" \
+  structurizr/lite
+```
+
+Visit `http://localhost:8081`, open `workspace.dsl`, and export PNG/SVG. `docs/architecture/README.md` covers Structurizr CLI usage and maintenance expectations.
+
+### Visual reference
+The repo tracks the latest diagrams (and their legend keys) so reviewers can reference them quickly:
+
+1. **System context** – producers/engineers, Syncthing/Reaper, Whisper, Acast/Sanity.
+   ![Automation Context Diagram](docs/architecture/structurizr-1-context.png)
+   ![Context Diagram Key](docs/architecture/structurizr-1-context-key.png)
+
+2. **Container view** – ingest/edit/export/transcript/notes/artwork/publish CLIs plus shared stores (`configs/`, `assets/`, `outputs/`) and docs/tests surfaces.
+   ![Automation Container Diagram](docs/architecture/structurizr-1-containers.png)
+   ![Container Diagram Key](docs/architecture/structurizr-1-containers-key.png)
+
+3. **Edit component view** – the orchestration, config, mixing, analysis, cuts, transcript sync, AI guidance, and export pieces inside `automation.edit`.
+   ![Edit Component Diagram](docs/architecture/structurizr-1-edit-components.png)
+   ![Edit Component Diagram Key](docs/architecture/structurizr-1-edit-components-key.png)
