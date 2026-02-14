@@ -14,3 +14,25 @@
 - Provide sample transcript JSON fixtures for contributors without Whisper installed, or guard the CLI with a clearer error when Whisper/torch isn’t available.
 - Surface configurable phrase/keyword lists in a TOML file so future episodes can tweak alignment without code edits.
 - Document the new stem exports and transcript-trimming flow in README/AGENTS (including ffmpeg + torch install tips).
+
+# Agentic Stage Readiness (for stakeholder conversations)
+
+The current repo is still in a **workflow automation foundation** phase, not a full agentic orchestration phase. The existing CLIs are deterministic, stage-specific building blocks that make the pipeline reproducible and testable before adding higher-autonomy decision loops.
+
+## Recommended plan for the agentic stage
+
+When we promote to an agentic architecture, prioritize OpenAI APIs so the team can stay on one paid platform:
+
+1. **Primary orchestration model**: OpenAI Responses API (`gpt-5`/`gpt-4.1` class) with tool calling.
+2. **Pipeline control loop**: a thin planner/executor that can run stage CLIs (`ingest`, `edit`, `export`, `transcript`, `notes`, `artwork`, `publish`) as tools.
+3. **State + audit trail**: persist run goals, intermediate decisions, tool outputs, and final artifacts to `outputs/` plus structured JSON logs.
+4. **Human-in-the-loop gates**: require approval checkpoints before irreversible actions (publishing, metadata pushes, artwork replacement).
+5. **Guardrails**: strict prompt templates, schema validation for tool arguments, max-step/time budgets, and rollback/retry policies.
+
+## Suggested implementation sequence
+
+- **Phase A (next)**: keep deterministic stage CLIs as-is; add machine-readable output contracts where missing.
+- **Phase B**: add a local orchestrator command (for example, `python -m automation.agent.run`) that calls stage CLIs via tool wrappers.
+- **Phase C**: add policy gates and reviewer approvals, then connect outbound integrations (Acast/CMS) behind feature flags.
+
+This sequencing keeps quality and editorial authenticity first while making it easier to explain internally: *we are deliberately not fully agentic yet; we are preparing the substrate so agentic behavior is safe and useful when introduced*.
